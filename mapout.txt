@@ -1,0 +1,132 @@
+struct Halo4_TS1
+{
+	0x008	bool lookInversion;
+	0x009	bool flightInversion;
+	0x00A 	bool autolookCentering;
+	0x00B	bool holdToCrouch;
+	
+	0x00D	bool clenchProtection;
+	0x00E	BYTE buttonLayout;
+	0x00F	BYTE stickLayout;
+	0x010	BYTE sensitivity; 					// minus one
+	
+	0x018	DWORD theaterCameraSpeed;
+	0x01C	DWORD theaterCameraTurnSensitivity;
+	0x020	BOOL theaterCameraPanningToggle;
+	0x024	DWORD theaterCameraThrust	
+
+	0x02C	DWORD missionFlags;					// all 0xFFs if no campaign progress
+	0x030	UINT64 missionStatuses;
+
+	0x050	UINT64 coopMissionStatuses;
+
+	0x074 	time_t lastInCampaign;
+	
+	0x086	WORD missionsUnlockedFlags;
+	0x088	BYTE rallyPoints[0x10];
+	
+	0x0F4	DWORD terminalFlags;
+	0x0F8	DWORD gender;
+	0x0FC	DWORD armorPrimaryColor;
+	0x100	DWORD armorSecondaryColor;
+	
+	0x107	BYTE armorVisorColor;
+	
+	0x10C	BYTE emblemForeground;
+	0x10D	BYTE emblemBackground;
+	0x10E	bool hideEmblemDetails;
+	0x10F 	BYTE emblemPrimaryColor;
+	0x110	BYTE emblemSecondaryColor;
+	0x111	BYTE emblemTertiaryColor;
+
+	0x114	BYTE armorHelmet;
+	0x115	BYTE armorTorso;
+
+	0x117	BYTE armorLeftShoulder;
+	0x118	BYTE armorRightShoulder;
+	0x119	BYTE armorForearms;
+	0x11A	BYTE armorLegs;
+	
+	0x12A	wchar_t	serviceTag[5];				// null terminating
+	
+	0x135	BYTE stance;
+	
+	0x13B	bool playersMuted;
+
+	0x143	ControlVoiceChat controlVoiceChat;	// 1 byte in length
+	0x144	BYTE messageFlags;
+	
+	0x178 	DWORD spartanPoints;
+
+	0x180	DWORD experience;
+};
+
+// campaign progress is stored in the save game, as well as the GPD
+
+BitArray rallyPoints;
+rallyPoints[2] = Requiem-Bravo;
+rallyPoints[7] = Requiem-Alpha;
+
+rallyPoints[18] = Dawn-Bravo;
+rallyPoints[11] = Dawn-Alpha;
+
+rallyPoints[50] = Forerunner-Delta
+rallyPoints[54] = Forerunner-Charlie
+rallyPoints[57] = Forerunner-Bravo;
+rallyPoints[59] = Forerunner-Alpha;
+
+rallyPoints[41] = Infinity-Charlie;
+rallyPoints[44] = Infinity-Bravo;
+rallyPoints[47] = Infinity-Alpha;
+
+rallyPoints[35] = Reclaimer-Alpha;
+rallyPoints[92] = Reclaimer-Bravo;
+
+rallyPoints[82] = Shutdown-Delta;
+rallyPoints[83] = Shutdown-Charlie;
+rallyPoints[84] = Shutdown-Bravo;
+rallyPoints[87] = Shutdown-Alpha;
+
+rallyPoints[41] = Composer-Alpha;
+rallyPoints[68] = Composer-Bravo;
+
+rallyPoints[125] = Midnight-Charlie;
+rallyPoints[126] = Midnight-Bravo;
+rallyPoints[127] = Midnight-Alpha;
+
+rallyPoints[115] = Epilogue-Start;
+
+struct Halo4_TS3
+{
+	0x0BC	time_t lastPlayed;
+	0x258	BYTE sha1Checksum[0x14];
+};
+
+enum Gender
+{
+	Male = 0,
+	Female = 1
+};
+
+enum ControlVoiceChat
+{
+	AllPlayers = 0,
+	TeamAndParty = 1
+};
+
+enum CompleteDifficulty
+{
+	None = 0,
+	Easy = 1,
+	Normal = 2,
+	Hard = 4,
+	Legendary = 8
+};
+
+// flags indicating whether or not these messages have been shown before
+enum MessageFlags
+{
+	GoneToInfinity = 1,
+	PromotedOffline = 4,
+	CompletedCampaign = 8
+};
