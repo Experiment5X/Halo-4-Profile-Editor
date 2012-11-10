@@ -239,6 +239,7 @@ void Halo4ProfileDialog::on_cmbxDiffSP_currentIndexChanged(int index)
     if (currentRow < 0 || index < 0)
         return;
 
+    spChange = false;
     ui->chkSP->setCheckState(((titleSpecific1.missionStatuses >> ((currentRow + ((currentRow < 8) ? 8 : 0)) * 4)) & (1 << index)) * 2);
 }
 
@@ -248,6 +249,7 @@ void Halo4ProfileDialog::on_cmbxDiffCoOp_currentIndexChanged(int index)
     if (currentRow < 0 || index < 0)
         return;
 
+    coopChange = false;
     ui->chkCoOp->setCheckState(((titleSpecific1.coopMissionStatuses >> ((currentRow + ((currentRow < 8) ? 8 : 0)) * 4)) & (1 << index)) * 2);
 }
 
@@ -344,6 +346,12 @@ void Halo4ProfileDialog::on_listWidget_itemChanged(QListWidgetItem *item)
 
 void Halo4ProfileDialog::on_chkSP_stateChanged(int arg1)
 {
+    if (spChange == false)
+    {
+        spChange = true;
+        return;
+    }
+
     UINT64 shiftValue = ((ui->listWidget->currentRow() + ((ui->listWidget->currentRow() < 8) ? 8 : 0)) * 4) + ui->cmbxDiffSP->currentIndex();
     titleSpecific1.missionStatuses &= ~(UINT64)((UINT64)1 << shiftValue);
     titleSpecific1.missionStatuses |= ((UINT64)arg1 << (shiftValue - 1));
@@ -351,6 +359,12 @@ void Halo4ProfileDialog::on_chkSP_stateChanged(int arg1)
 
 void Halo4ProfileDialog::on_chkCoOp_stateChanged(int arg1)
 {
+    if (coopChange == false)
+    {
+        coopChange = true;
+        return;
+    }
+
     UINT64 shiftValue = ((ui->listWidget->currentRow() + ((ui->listWidget->currentRow() < 8) ? 8 : 0)) * 4) + ui->cmbxDiffCoOp->currentIndex();
     titleSpecific1.coopMissionStatuses &= ~(UINT64)((UINT64)1 << shiftValue);
     titleSpecific1.coopMissionStatuses |= ((UINT64)arg1 << (shiftValue - 1));

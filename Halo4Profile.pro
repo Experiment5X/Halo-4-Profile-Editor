@@ -1,7 +1,5 @@
 TARGET = Halo4Profile
 
-DEFINES += SHOW_UI
-
 CONFIG(debug, debug|release) {
     TEMPLATE = app
     CONFIG += plugin debug

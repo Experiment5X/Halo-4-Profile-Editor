@@ -158,6 +158,8 @@ private:
     Halo4_TS1 titleSpecific1;
     BitArray *rallyPointBits;
     bool loaded;
+    bool spChange;
+    bool coopChange;
 
     SettingEntry tp1;
     SettingEntry tp2;
