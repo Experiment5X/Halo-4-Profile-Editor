@@ -23,7 +23,7 @@ QString rallyPoints[] =
     "Delta"
 };
 
-Halo4ProfileDialog::Halo4ProfileDialog(QWidget *parent) : QDialog(parent), ui(new Ui::Halo4ProfileDialog), loaded(false)
+Halo4ProfileDialog::Halo4ProfileDialog(QWidget *parent) : QDialog(parent), ui(new Ui::Halo4ProfileDialog), loaded(false), gpd(NULL), t1Stream(NULL)
 {
     // add all of the rally point bit offsets
     halo4Missions[1].rallyPointBitOffsets.push_back(11);
@@ -104,7 +104,7 @@ void Halo4ProfileDialog::LoadGPD(GameGPD *gpd, void *args)
     titleSpecific1.lastInCampaign = t1Stream->readDword();
 
     t1Stream->setPosition(0x86);
-    titleSpecific1.missionsUnlockedFlags = t1Stream->readWord();
+    titleSpecific1.missionsUnlockedFlags = t1Stream->readWord() | 1;
 
     t1Stream->readBytes(titleSpecific1.rallyPoints, 0x10);
 
@@ -168,9 +168,13 @@ void Halo4ProfileDialog::LoadGPD(GameGPD *gpd, void *args)
     {
         QListWidgetItem *item = new QListWidgetItem(ui->listWidget);
         item->setText(halo4Missions[i].name);
-        item->setFlags(Qt::ItemIsUserCheckable | Qt::ItemIsEnabled | Qt::ItemIsSelectable);
-
-        item->setCheckState((!!(titleSpecific1.missionsUnlockedFlags & (1 << i))) << 1);
+        if (i != 0)
+        {
+            item->setFlags(Qt::ItemIsUserCheckable | Qt::ItemIsEnabled | Qt::ItemIsSelectable);
+            item->setCheckState((!!(titleSpecific1.missionsUnlockedFlags & (1 << i))) << 1);
+        }
+        else
+            item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
 
         ui->listWidget->addItem(item);
     }
@@ -202,9 +206,12 @@ DWORD Halo4ProfileDialog::TitleID() const
 
 Halo4ProfileDialog::~Halo4ProfileDialog()
 {
-    delete gpd;
-    delete t1Stream;
-    delete ui;
+    if (gpd)
+        delete gpd;
+    if (t1Stream)
+        delete t1Stream;
+    if (ui)
+        delete ui;
 }
 
 void Halo4ProfileDialog::on_listWidget_currentRowChanged(int currentRow)
@@ -274,6 +281,7 @@ void Halo4ProfileDialog::on_pushButton_clicked()
     t1Stream->setPosition(0x2C);
     t1Stream->write(titleSpecific1.missionFlags);
     t1Stream->write(titleSpecific1.missionStatuses);
+    qDebug() << "Save: " << QString::number(titleSpecific1.missionsUnlockedFlags, 16);
 
     t1Stream->setPosition(0x50);
     t1Stream->write(titleSpecific1.coopMissionStatuses);
@@ -341,7 +349,12 @@ void Halo4ProfileDialog::on_listWidget_itemChanged(QListWidgetItem *item)
         return;
 
     titleSpecific1.missionsUnlockedFlags &= ~(1 << ui->listWidget->row(item));
-    titleSpecific1.missionsUnlockedFlags |= (item->checkState() << (ui->listWidget->row(item) - 1));
+    if (ui->listWidget->row(item) != 0)
+        titleSpecific1.missionsUnlockedFlags |= (item->checkState() << (ui->listWidget->row(item) - 1));
+    else
+        titleSpecific1.missionsUnlockedFlags |= (item->checkState() >> 1);
+
+    qDebug() << QString::number(titleSpecific1.missionsUnlockedFlags, 16);
 }
 
 void Halo4ProfileDialog::on_chkSP_stateChanged(int arg1)

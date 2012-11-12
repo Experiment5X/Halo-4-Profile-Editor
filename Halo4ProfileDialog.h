@@ -12,6 +12,7 @@
 #include <QByteArray>
 #include <QMessageBox>
 #include <QListWidgetItem>
+#include <QDebug>
 
 // other
 #include "igpdmodder.h"
