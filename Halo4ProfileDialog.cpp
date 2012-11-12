@@ -325,7 +325,7 @@ void Halo4ProfileDialog::on_pushButton_clicked()
 
     gpd->Close();
 
-    emit InjectGPD();
+    emit PluginFinished();
 
     close();
 }

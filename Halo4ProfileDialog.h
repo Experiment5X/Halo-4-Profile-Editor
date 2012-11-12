@@ -120,7 +120,7 @@ public:
     DWORD TitleID() const;
 
 signals:
-    void InjectGPD();
+    void PluginFinished();
     
 private slots:
 
