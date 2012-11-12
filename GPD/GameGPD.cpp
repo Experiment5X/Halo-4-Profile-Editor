@@ -90,15 +90,6 @@ void GameGPD::WriteAchievementEntry(AchievementEntry *entry)
 	io->flush();
 }
 
-SettingEntry GameGPD::GetSetting(UINT64 id)
-{
-    for (DWORD i = 0; i < settings.size(); i++)
-        if (settings.at(i).entry.id == id)
-            return settings.at(i);
-
-    return SettingEntry();
-}
-
 void GameGPD::CreateAchievement(AchievementEntry *entry, BYTE *thumbnail, DWORD thumbnailLen)
 {
 	DWORD entryLen = 0x1C + ((entry->name.size() + entry->unlockedDescription.size() + entry->lockedDescription.size() + 3) * 2);
@@ -195,7 +186,7 @@ void GameGPD::UnlockAllAchievementsOffline()
 
 		// update the sync stuff
 		xdbf->UpdateEntry(&achievements.at(i).entry);
-	}
+    }
 }
 
 void GameGPD::init()

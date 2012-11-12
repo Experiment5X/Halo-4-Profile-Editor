@@ -5,9 +5,6 @@
 
 StfsPackage::StfsPackage(string packagePath, DWORD flags) : flags(flags)
 {
-    Botan::LibraryInitializer init;
-    sha1 = new Botan::SHA_160;
-
     io = new FileIO(packagePath, (bool)(flags & StfsPackageCreate));
 
     // if we need to create a file, then do it yo
@@ -241,6 +238,9 @@ DWORD StfsPackage::ComputeLevel2BackingHashBlockNumber(DWORD blockNum)
 
 DWORD StfsPackage::GetHashAddressOfBlock(DWORD blockNum)
 {
+    if (blockNum >= metaData->volumeDescriptor.allocatedBlockCount)
+         throw string("STFS: Reference to illegal block number.\n");
+
     DWORD hashAddr = (ComputeLevel0BackingHashBlockNumber(blockNum) << 0xC) + firstHashTableAddress;
     hashAddr += (blockNum % 0xAA) * 0x18;
 
@@ -260,6 +260,9 @@ DWORD StfsPackage::GetHashAddressOfBlock(DWORD blockNum)
 
 HashEntry StfsPackage::GetBlockHashEntry(DWORD blockNum)
 {
+    if (blockNum >= metaData->volumeDescriptor.allocatedBlockCount)
+        throw string("STFS: Reference to illegal block number.\n");
+
     // go to the position of the hash address
     io->setPosition(GetHashAddressOfBlock(blockNum));
 
@@ -274,6 +277,9 @@ HashEntry StfsPackage::GetBlockHashEntry(DWORD blockNum)
 
 void StfsPackage::ExtractBlock(DWORD blockNum, BYTE *data, DWORD length)
 {
+    if (blockNum >= metaData->volumeDescriptor.allocatedBlockCount)
+         throw string("STFS: Reference to illegal block number.\n");
+
     // check for an invalid block length
     if (length > 0x1000)
         throw string("STFS: length cannot be greater 0x1000.\n");
@@ -363,6 +369,21 @@ FileListing StfsPackage::GetFileListing(bool forceUpdate)
         ReadFileListing();
 
     return fileListing;
+}
+
+DWORD StfsPackage::GetFileMagic(string pathInPackage)
+{
+    FileEntry entry = GetFileEntry(pathInPackage);
+
+    // make sure the file is at least 4 bytes
+    if (entry.fileSize < 4)
+        return 0;
+
+    // seek to the begining of the file in the package
+    io->setPosition(BlockToAddress(entry.startingBlockNum));
+
+    // read the magic
+    return io->readDword();
 }
 
 void StfsPackage::ExtractFile(string pathInPackage, string outPath, void (*extractProgress)(void*, DWORD, DWORD), void *arg)
@@ -717,7 +738,7 @@ HashTable StfsPackage::GetLevelNHashTable(DWORD index, Level lvl)
     toReturn.addressInFile = baseHashAddress;
     io->setPosition(toReturn.addressInFile);
 
-    for  (DWORD i = 0; i < toReturn.entryCount; i++)
+    for (DWORD i = 0; i < toReturn.entryCount; i++)
     {
         io->readBytes(toReturn.entries[i].blockHash, 0x14);
         toReturn.entries[i].status = io->readByte();
@@ -771,7 +792,7 @@ void StfsPackage::Rehash()
             break;
 
         case One:
-            // loop through all of the level0 hash blocks
+            // loop through all of the level1 hash blocks
             for (DWORD i = 0; i < topTable.entryCount; i++)
             {
                 // get the current level0 hash table
@@ -803,7 +824,7 @@ void StfsPackage::Rehash()
             break;
 
         case Two:
-            // iterate through all of the level1 tables
+            // iterate through all of the level2 tables
             for (DWORD i = 0; i < topTable.entryCount; i++)
             {
                 // get the current level1 hash table
@@ -900,11 +921,12 @@ void StfsPackage::Rehash()
     io->readBytes(buffer, headerSize);
 
     // hash the header
-    sha1->clear();
-    sha1->update(buffer, headerSize);
-    sha1->final(metaData->headerHash);
+    Botan::SHA_160 sha1;
+    sha1.update(buffer, headerSize);
+    sha1.final(metaData->headerHash);
 
     delete[] buffer;
+    sha1.clear();
 
     metaData->WriteMetaData();
 }
@@ -1096,9 +1118,10 @@ void StfsPackage::Resign(string kvPath)
     io->readBytes(buffer, headerSize);
 
     // hash the header
-    sha1->clear();
-    sha1->update(buffer, headerSize);
-    sha1->final(metaData->headerHash);
+    Botan::SHA_160 sha1;
+    sha1.clear();
+    sha1.update(buffer, headerSize);
+    sha1.final(metaData->headerHash);
 
     delete[] buffer;
 
@@ -1110,7 +1133,7 @@ void StfsPackage::Resign(string kvPath)
     BYTE *dataToSign = new BYTE[size];
     io->readBytes(dataToSign, size);
 
-#ifdef __unix
+#if defined __unix | defined __APPLE__
     Botan::PK_Signer signer(pkey, "EMSA3(SHA-160)");
 #elif _WIN32
     Botan::PK_Signer signer(pkey, Botan::get_emsa("EMSA3(SHA-160)"));
@@ -1133,6 +1156,9 @@ void StfsPackage::Resign(string kvPath)
 
 void StfsPackage::SetBlockStatus(DWORD blockNum, BlockStatusLevelZero status)
 {
+    if (blockNum >= metaData->volumeDescriptor.allocatedBlockCount)
+         throw string("STFS: Reference to illegal block number.\n");
+
     DWORD statusAddress = GetHashAddressOfBlock(blockNum) + 0x14;
     io->setPosition(statusAddress);
     io->write((BYTE)status);
@@ -1141,9 +1167,10 @@ void StfsPackage::SetBlockStatus(DWORD blockNum, BlockStatusLevelZero status)
 void StfsPackage::HashBlock(BYTE *block, BYTE *outBuffer)
 {
     // hash the block
-    sha1->clear();
-    sha1->update(block, 0x1000);
-    sha1->final(outBuffer);
+    Botan::SHA_160 sha1;
+    sha1.clear();
+    sha1.update(block, 0x1000);
+    sha1.final(outBuffer);
 }
 
 void StfsPackage::BuildTableInMemory(HashTable *table, BYTE *outBuffer)
@@ -1330,7 +1357,9 @@ void StfsPackage::WriteFileListing(bool usePassed, vector<FileEntry> *outFis, ve
     io->write(nullBytes, remainer);
 
     // update the file table block count and write it to file
-    metaData->volumeDescriptor.fileTableBlockCount = ((outFiles.size() + outFileSize) * 0x40 / 0x1000) + 1;
+    metaData->volumeDescriptor.fileTableBlockCount = (outFoldersAndFilesSize / 0x40) + 1;
+    if (outFoldersAndFilesSize % 0x40 == 0 && outFoldersAndFilesSize != 0)
+        metaData->volumeDescriptor.fileTableBlockCount--;
     metaData->WriteVolumeDescriptor();
 
     ReadFileListing();
@@ -1344,6 +1373,9 @@ void StfsPackage::SetNextBlock(DWORD blockNum, INT24 nextBlockNum)
     DWORD hashLoc = GetHashAddressOfBlock(blockNum) + 0x15;
     io->setPosition(hashLoc);
     io->write((INT24)nextBlockNum);
+
+    if (topLevel == Zero)
+        topTable.entries[blockNum].nextBlock = nextBlockNum;
 
     io->flush();
 }
@@ -1378,6 +1410,12 @@ void StfsPackage::RemoveFile(string pathInPackage)
 
 INT24 StfsPackage::AllocateBlock()
 {
+    // reset the cached table
+    cached.addressInFile = 0;
+    cached.entryCount = 0;
+    cached.level = (Level)-1;
+    cached.trueBlockNumber = 0xFFFFFFFF;
+
     DWORD lengthToWrite = 0xFFF;
 
     // update the allocated block count
@@ -1397,8 +1435,17 @@ INT24 StfsPackage::AllocateBlock()
             lengthToWrite += (packageSex + 1) * 0x1000;
             tablesPerLevel[i] = recalcTablesPerLevel[i];
 
+            // update top level hash table if needed
             if ((i + 1) == topLevel)
+            {
                 topTable.entryCount++;
+                topTable.entries[topTable.entryCount - 1].status = 0;
+                topTable.entries[topTable.entryCount - 1].nextBlock = INT24_MAX;
+
+                // write it to the file
+                io->setPosition(topTable.addressInFile + ((tablesPerLevel[i] - 1) * 0x18) + 0x15);
+                io->write((INT24)INT24_MAX);
+            }
         }
     }
 
@@ -1434,6 +1481,13 @@ INT24 StfsPackage::AllocateBlock()
     // write the block status
     io->setPosition(GetHashAddressOfBlock(metaData->volumeDescriptor.allocatedBlockCount - 1) + 0x14);
     io->write((BYTE)Allocated);
+
+    if (topLevel == Zero)
+    {
+        topTable.entryCount++;
+        topTable.entries[metaData->volumeDescriptor.allocatedBlockCount - 1].status = (BYTE)Allocated;
+        topTable.entries[metaData->volumeDescriptor.allocatedBlockCount - 1].nextBlock = INT24_MAX;
+    }
 
     // terminate the chain
     io->write((INT24)0xFFFFFF);

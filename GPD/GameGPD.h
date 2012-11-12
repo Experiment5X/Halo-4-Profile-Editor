@@ -43,9 +43,6 @@ public:
 	// Description: unlock all of the achievements in the GPD offline and write them to the file
 	void UnlockAllAchievementsOffline();
 
-    // Description: returns a setting entry to the corresponding id
-    SettingEntry GetSetting(UINT64 id);
-
 	// Description: remove all of the unused memory from the gpd
 	void CleanGPD();
 

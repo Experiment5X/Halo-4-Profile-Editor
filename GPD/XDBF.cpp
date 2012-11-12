@@ -68,12 +68,14 @@ void XDBF::Clean()
     io->close();
 
     // delete the original file
-    int i = remove(io->getFilePath().c_str());
+    remove(io->getFilePath().c_str());
 
     // move the temp file to the old file's location
     rename(tempFileName, io->getFilePath().c_str());
 
-    io = new FileIO(io->getFilePath());
+    string path = io->getFilePath();
+    delete io;
+    io = new FileIO(path);
 
     // write the updated entry table
     writeEntryListing();

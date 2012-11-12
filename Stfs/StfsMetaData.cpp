@@ -109,6 +109,16 @@ void StfsMetaData::readMetadata()
             if (skeletonVersion < 1 || skeletonVersion > 3)
                 throw string("STFS: Invalid skeleton version.");
         }
+        else if (contentType == Video) // there may be other content types with this metadata
+        {
+            io->setPosition(0x3D9);
+
+            io->readBytes(seriesID, 0x10);
+            io->readBytes(seasonID, 0x10);
+
+            seasonNumber = io->readWord();
+            episodeNumber = io->readWord();
+        }
 
         // skip padding
         io->setPosition(0x3FD);
@@ -198,9 +208,7 @@ void StfsMetaData::readMetadata()
         // *skip missing int*
         io->setPosition(0x26C);
         io->readBytes(profileID, 8);
-
-        // *skip missing byte*
-        io->setPosition(0x275);
+        enabled = (bool)io->readByte();
         io->readBytes(consoleID, 5);
 
         // anything between 1 and 0x1000 works, inclusive
@@ -281,6 +289,16 @@ void StfsMetaData::WriteMetaData()
 
             io->write(guid, 0x10);
             io->write((BYTE)skeletonVersion);
+        }
+        else if (contentType == Video)
+        {
+            io->setPosition(0x3D9);
+
+            io->write(seriesID, 0x10);
+            io->readBytes(seasonID, 0x10);
+
+            io->write(seasonNumber);
+            io->write(episodeNumber);
         }
 
         // skip padding
@@ -367,9 +385,7 @@ void StfsMetaData::WriteMetaData()
         // *skip missing int*
         io->setPosition(0x26C);
         io->write(profileID, 8);
-
-        // *skip missing byte*
-        io->setPosition(0x275);
+        io->write((BYTE)enabled);
         io->write(consoleID, 5);
     }
 }

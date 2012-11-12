@@ -138,7 +138,7 @@ void GPDBase::DeleteSettingEntry(SettingEntry setting)
 {
     // remove the entry from the list
     DWORD i;
-    for (i = 0 ; i < settings.size(); i++)
+    for (i = 0; i < settings.size(); i++)
     {
         if (settings.at(i).entry.id == setting.entry.id)
         {
@@ -146,11 +146,30 @@ void GPDBase::DeleteSettingEntry(SettingEntry setting)
             break;
         }
     }
-    if (i == settings.size())
+    if (i > settings.size())
         throw string("GPD: Error deleting setting entry. Setting doesn't exist.\n");
 
     // delete the entry from the file
     xdbf->DeleteEntry(setting.entry);
+}
+
+void GPDBase::DeleteImageEntry(ImageEntry image)
+{
+    // remove the entry from the list
+    DWORD i;
+    for (i = 0 ; i < images.size(); i++)
+    {
+        if (images.at(i).entry.id == image.entry.id)
+        {
+            images.erase(images.begin() + i);
+            break;
+        }
+    }
+    if (i > settings.size())
+        throw string("GPD: Error deleting image entry. Image doesn't exist.\n");
+
+    // delete the entry from the file
+    xdbf->DeleteEntry(image.entry);
 }
 
 void GPDBase::CreateSettingEntry(SettingEntry *setting, UINT64 entryID)
@@ -252,7 +271,7 @@ void GPDBase::WriteSettingEntry(SettingEntry setting)
             break;
         }
         case Binary:
-            DWORD calculatedLength = 0x18 + setting.binaryData.length;
+            DWORD calculatedLength = 0x18 + setting.binaryData.length + 1;
             if (setting.entry.length != calculatedLength)
             {
                 // adjust the memory if the length changed
@@ -302,4 +321,6 @@ GPDBase::~GPDBase(void)
     // deallocate all of the image memory
     for (DWORD i = 0; i < images.size(); i++)
         delete[] images.at(i).image;
+
+    delete io;
 }
