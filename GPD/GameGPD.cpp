@@ -1,6 +1,5 @@
 #include "GameGPD.h"
 
-
 GameGPD::GameGPD(string filePath) : GPDBase(filePath)
 {
 	init();
@@ -14,6 +13,15 @@ GameGPD::GameGPD(FileIO *io) : GPDBase(io)
 void GameGPD::CleanGPD()
 {
 	xdbf->Clean();
+}
+
+SettingEntry GameGPD::GetSetting(UINT64 id)
+{
+    for (DWORD i = 0; i < settings.size(); i++)
+        if (settings.at(i).entry.id == id)
+            return settings.at(i);
+
+    return SettingEntry();
 }
 
 AchievementEntry GameGPD::readAchievementEntry(XDBFEntry entry)

@@ -34,6 +34,9 @@ public:
 	// Description: delete an achievement
 	void DeleteAchievement(AchievementEntry *entry);
 
+    // Description: returns a setting entry to the corresponding id
+    SettingEntry GetSetting(UINT64 id);
+
 	// Description: get the type of an achievement
     static string GetAchievementType(AchievementEntry *entry);
 
