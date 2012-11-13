@@ -407,7 +407,7 @@ void Halo4ProfileDialog::on_pushButton_3_clicked()
     ui->spnExp->setValue(0x7FFFFFFF);
     ui->spnSpartanPoints->setValue(0x7FFFFFFF);
 
-    for (DWORD i = 0; i < ui->listWidget->count(); i++)
+    for (DWORD i = 1; i < ui->listWidget->count(); i++)
         ui->listWidget->item(i)->setCheckState(Qt::Checked);
     ui->listWidget->setCurrentRow(0);
 
