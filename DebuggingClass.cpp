@@ -19,11 +19,13 @@ DebuggingClass::DebuggingClass(QObject *parent) :
     args->tempFilePath = tempPath;
 
     GameGPD *gameGPD = new GameGPD(tempPath.toStdString());
-    w.LoadGPD(gameGPD, args);
+    bool ok;
+    w.LoadGPD(gameGPD, &ok, args);
 
     connect(&w, SIGNAL(InjectGPD()), this, SLOT(InjectGPD()));
 
-    w.exec();
+    if (ok)
+        w.exec();
 }
 
 void DebuggingClass::InjectGPD()

@@ -1,11 +1,11 @@
 TARGET = Halo4Profile
 
 CONFIG(debug, debug|release) {
-    TEMPLATE = app
+    #TEMPLATE = app
     CONFIG += plugin debug
 
     #uncomment the below to build the plugin for debug mode
-    #TEMPLATE = lib
+    TEMPLATE = lib
 
     HEADERS += \
         DebuggingClass.h \

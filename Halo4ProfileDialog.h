@@ -114,7 +114,7 @@ public:
     explicit Halo4ProfileDialog(QWidget *parent = 0);
     ~Halo4ProfileDialog();
 
-    void LoadGPD (GameGPD *gpd, void *args = NULL);
+    void LoadGPD (GameGPD *gpd, bool *ok = NULL, void *args = NULL);
     QWidget* GetDialog();
     QString ToolAuthor() const;
     QString ToolName() const;

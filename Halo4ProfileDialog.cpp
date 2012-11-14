@@ -64,13 +64,20 @@ Halo4ProfileDialog::Halo4ProfileDialog(QWidget *parent) : QDialog(parent), ui(ne
 
 Q_EXPORT_PLUGIN2(Halo4Profile, Halo4ProfileDialog)
 
-void Halo4ProfileDialog::LoadGPD(GameGPD *gpd, void *args)
+void Halo4ProfileDialog::LoadGPD(GameGPD *gpd, bool *ok, void *args)
 {
     Arguments = args;
 
     tp1 = gpd->GetSetting(TitleSpecific1);
     tp2 = gpd->GetSetting(TitleSpecific2);
     tp3 = gpd->GetSetting(TitleSpecific3);
+
+    if (tp1.type == 0 || tp2.type == 0 || tp3.type == 0)
+    {
+        QMessageBox::critical(this, "Settings Missing", "This profile is missing setting data require to use this tool.");
+        *ok = false;
+        return;
+    }
 
     // read the data from the setting
     t1Stream = new MemoryStream(tp1.binaryData.data, tp1.binaryData.length);
@@ -182,6 +189,7 @@ void Halo4ProfileDialog::LoadGPD(GameGPD *gpd, void *args)
     ui->listWidget->setCurrentRow(0);
 
     loaded = true;
+    *ok = true;
 }
 
 QWidget* Halo4ProfileDialog::GetDialog()
