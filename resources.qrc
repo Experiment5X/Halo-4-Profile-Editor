@@ -4,13 +4,13 @@
         <file>images/composer.jpg</file>
         <file>images/epilogue.jpg</file>
         <file>images/forerunner.jpg</file>
-        <file>images/infinity.jpg</file>
         <file>images/midnight.jpg</file>
         <file>images/prologue.jpg</file>
-        <file>images/reclaimer.jpg</file>
         <file>images/shutdown.jpg</file>
         <file>images/dawn.jpg</file>
         <file>images/requiem.jpg</file>
         <file>images/unlock.png</file>
+        <file>images/infinity.jpg</file>
+        <file>images/reclaimer.jpg</file>
     </qresource>
 </RCC>
