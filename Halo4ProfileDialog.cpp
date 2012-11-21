@@ -197,9 +197,14 @@ QWidget* Halo4ProfileDialog::GetDialog()
     return this;
 }
 
+QString Halo4ProfileDialog::Version() const
+{
+    return "0.0.0.1";
+}
+
 QString Halo4ProfileDialog::ToolAuthor() const
 {
-    return "Exetelek";
+    return "Expetelek";
 }
 
 QString Halo4ProfileDialog::ToolName() const

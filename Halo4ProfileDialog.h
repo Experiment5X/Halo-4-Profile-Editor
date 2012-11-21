@@ -116,6 +116,7 @@ public:
 
     void LoadGPD (GameGPD *gpd, bool *ok = NULL, void *args = NULL);
     QWidget* GetDialog();
+    QString Version() const;
     QString ToolAuthor() const;
     QString ToolName() const;
     DWORD TitleID() const;
