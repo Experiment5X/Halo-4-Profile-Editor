@@ -80,89 +80,89 @@ void Halo4ProfileDialog::LoadGPD(GameGPD *gpd, bool *ok, void *args)
     }
 
     // read the data from the setting
-    t1Stream = new MemoryStream(tp1.binaryData.data, tp1.binaryData.length);
+    t1Stream = new MemoryIO(tp1.binaryData.data, tp1.binaryData.length);
 
-    t1Stream->setPosition(8);
-    titleSpecific1.lookInversion = t1Stream->readByte();
-    titleSpecific1.flightInversion = t1Stream->readByte();
-    titleSpecific1.autolookCentering = t1Stream->readByte();
-    titleSpecific1.holdToCrouch = t1Stream->readByte();
+    t1Stream->SetPosition(8);
+    titleSpecific1.lookInversion = t1Stream->ReadByte();
+    titleSpecific1.flightInversion = t1Stream->ReadByte();
+    titleSpecific1.autolookCentering = t1Stream->ReadByte();
+    titleSpecific1.holdToCrouch = t1Stream->ReadByte();
 
-    t1Stream->setPosition(0x0D);
-    titleSpecific1.clenchProtection = t1Stream->readByte();
-    titleSpecific1.buttonLayout = t1Stream->readByte();
-    titleSpecific1.stickLayout = t1Stream->readByte();
-    titleSpecific1.sensitivity = t1Stream->readByte();
+    t1Stream->SetPosition(0x0D);
+    titleSpecific1.clenchProtection = t1Stream->ReadByte();
+    titleSpecific1.buttonLayout = t1Stream->ReadByte();
+    titleSpecific1.stickLayout = t1Stream->ReadByte();
+    titleSpecific1.sensitivity = t1Stream->ReadByte();
 
-    t1Stream->setPosition(0x10);
-    titleSpecific1.theaterCameraSpeed = t1Stream->readDword();
-    titleSpecific1.theaterCameraTurnSensitivity = t1Stream->readDword();
-    titleSpecific1.theaterCameraPanningToggle = t1Stream->readDword();
-    titleSpecific1.theaterCameraThrust = t1Stream->readDword();
+    t1Stream->SetPosition(0x10);
+    titleSpecific1.theaterCameraSpeed = t1Stream->ReadDword();
+    titleSpecific1.theaterCameraTurnSensitivity = t1Stream->ReadDword();
+    titleSpecific1.theaterCameraPanningToggle = t1Stream->ReadDword();
+    titleSpecific1.theaterCameraThrust = t1Stream->ReadDword();
 
-    t1Stream->setPosition(0x2C);
-    titleSpecific1.missionFlags = t1Stream->readDword();
-    titleSpecific1.missionStatuses = t1Stream->readUInt64();
+    t1Stream->SetPosition(0x2C);
+    titleSpecific1.missionFlags = t1Stream->ReadDword();
+    titleSpecific1.missionStatuses = t1Stream->ReadUint64();
 
-    t1Stream->setPosition(0x50);
-    titleSpecific1.coopMissionStatuses = t1Stream->readUInt64();
+    t1Stream->SetPosition(0x50);
+    titleSpecific1.coopMissionStatuses = t1Stream->ReadUint64();
 
-    t1Stream->setPosition(0x74);
-    titleSpecific1.lastInCampaign = t1Stream->readDword();
+    t1Stream->SetPosition(0x74);
+    titleSpecific1.lastInCampaign = t1Stream->ReadDword();
 
-    t1Stream->setPosition(0x86);
-    titleSpecific1.missionsUnlockedFlags = t1Stream->readWord() | 1;
+    t1Stream->SetPosition(0x86);
+    titleSpecific1.missionsUnlockedFlags = t1Stream->ReadWord() | 1;
 
-    t1Stream->readBytes(titleSpecific1.rallyPoints, 0x10);
+    t1Stream->ReadBytes(titleSpecific1.rallyPoints, 0x10);
 
     // the rally points are store as bit flags, so let's treat them as such
     rallyPointBits = new BitArray(titleSpecific1.rallyPoints, 0x10);
 
-    t1Stream->setPosition(0xF4);
-    titleSpecific1.terminalFlags = t1Stream->readDword();
-    titleSpecific1.gender = t1Stream->readDword();
-    titleSpecific1.armorPrimaryColor = t1Stream->readDword();
-    titleSpecific1.armorSecondaryColor = t1Stream->readDword();
+    t1Stream->SetPosition(0xF4);
+    titleSpecific1.terminalFlags = t1Stream->ReadDword();
+    titleSpecific1.gender = t1Stream->ReadDword();
+    titleSpecific1.armorPrimaryColor = t1Stream->ReadDword();
+    titleSpecific1.armorSecondaryColor = t1Stream->ReadDword();
 
-    t1Stream->setPosition(0x107);
-    titleSpecific1.armorVisorColor = t1Stream->readByte();
+    t1Stream->SetPosition(0x107);
+    titleSpecific1.armorVisorColor = t1Stream->ReadByte();
 
-    t1Stream->setPosition(0x10C);
-    titleSpecific1.emblemForeground = t1Stream->readByte();
-    titleSpecific1.emblemBackground = t1Stream->readByte();
-    titleSpecific1.hideEmblemDetails = t1Stream->readByte();
-    titleSpecific1.emblemPrimaryColor = t1Stream->readByte();
-    titleSpecific1.emblemSecondaryColor = t1Stream->readByte();
-    titleSpecific1.emblemTertiaryColor = t1Stream->readByte();
+    t1Stream->SetPosition(0x10C);
+    titleSpecific1.emblemForeground = t1Stream->ReadByte();
+    titleSpecific1.emblemBackground = t1Stream->ReadByte();
+    titleSpecific1.hideEmblemDetails = t1Stream->ReadByte();
+    titleSpecific1.emblemPrimaryColor = t1Stream->ReadByte();
+    titleSpecific1.emblemSecondaryColor = t1Stream->ReadByte();
+    titleSpecific1.emblemTertiaryColor = t1Stream->ReadByte();
 
-    t1Stream->setPosition(0x114);
-    titleSpecific1.armorHelmet = t1Stream->readByte();
-    titleSpecific1.armorTorso = t1Stream->readByte();
+    t1Stream->SetPosition(0x114);
+    titleSpecific1.armorHelmet = t1Stream->ReadByte();
+    titleSpecific1.armorTorso = t1Stream->ReadByte();
 
-    t1Stream->setPosition(0x117);
-    titleSpecific1.armorLeftShoulder = t1Stream->readByte();
-    titleSpecific1.armorRightShoulder = t1Stream->readByte();
-    titleSpecific1.armorForearms = t1Stream->readByte();
-    titleSpecific1.armorLegs = t1Stream->readByte();
+    t1Stream->SetPosition(0x117);
+    titleSpecific1.armorLeftShoulder = t1Stream->ReadByte();
+    titleSpecific1.armorRightShoulder = t1Stream->ReadByte();
+    titleSpecific1.armorForearms = t1Stream->ReadByte();
+    titleSpecific1.armorLegs = t1Stream->ReadByte();
 
-    t1Stream->setPosition(0x12A);
+    t1Stream->SetPosition(0x12A);
     for (DWORD i = 0; i < 5; i++)
-        titleSpecific1.serviceTag[i] = t1Stream->readWord();
+        titleSpecific1.serviceTag[i] = t1Stream->ReadWord();
 
-    t1Stream->setPosition(0x135);
-    titleSpecific1.stance = t1Stream->readByte();
+    t1Stream->SetPosition(0x135);
+    titleSpecific1.stance = t1Stream->ReadByte();
 
-    t1Stream->setPosition(0x13B);
-    titleSpecific1.playersMuted = t1Stream->readByte();
+    t1Stream->SetPosition(0x13B);
+    titleSpecific1.playersMuted = t1Stream->ReadByte();
 
-    t1Stream->setPosition(0x143);
-    titleSpecific1.controlVoiceChat = t1Stream->readByte();
+    t1Stream->SetPosition(0x143);
+    titleSpecific1.controlVoiceChat = t1Stream->ReadByte();
 
-    t1Stream->setPosition(0x178);
-    titleSpecific1.spartanPoints = t1Stream->readDword();
+    t1Stream->SetPosition(0x178);
+    titleSpecific1.spartanPoints = t1Stream->ReadDword();
 
-    t1Stream->setPosition(0x180);
-    titleSpecific1.experience = t1Stream->readDword();
+    t1Stream->SetPosition(0x180);
+    titleSpecific1.experience = t1Stream->ReadDword();
 
     this->gpd = gpd;
 
@@ -291,35 +291,35 @@ void Halo4ProfileDialog::on_pushButton_clicked()
     if (titleSpecific1.missionFlags == 0xFFFFFFFF)
         titleSpecific1.missionFlags = 0;
 
-    t1Stream->setPosition(0x2C);
-    t1Stream->write(titleSpecific1.missionFlags);
-    t1Stream->write(titleSpecific1.missionStatuses);
+    t1Stream->SetPosition(0x2C);
+    t1Stream->Write(titleSpecific1.missionFlags);
+    t1Stream->Write(titleSpecific1.missionStatuses);
     qDebug() << "Save: " << QString::number(titleSpecific1.missionsUnlockedFlags, 16);
 
-    t1Stream->setPosition(0x50);
-    t1Stream->write(titleSpecific1.coopMissionStatuses);
+    t1Stream->SetPosition(0x50);
+    t1Stream->Write(titleSpecific1.coopMissionStatuses);
 
-    t1Stream->setPosition(0x74);
-    t1Stream->write((DWORD)titleSpecific1.lastInCampaign);
+    t1Stream->SetPosition(0x74);
+    t1Stream->Write((DWORD)titleSpecific1.lastInCampaign);
 
-    t1Stream->setPosition(0x86);
-    t1Stream->write(titleSpecific1.missionsUnlockedFlags);
+    t1Stream->SetPosition(0x86);
+    t1Stream->Write(titleSpecific1.missionsUnlockedFlags);
 
-    t1Stream->setPosition(0x88);
-    t1Stream->write(titleSpecific1.rallyPoints, 0x10);
+    t1Stream->SetPosition(0x88);
+    t1Stream->WriteBytes(titleSpecific1.rallyPoints, 0x10);
 
-    t1Stream->setPosition(0x178);
-    t1Stream->write(titleSpecific1.spartanPoints);
+    t1Stream->SetPosition(0x178);
+    t1Stream->Write(titleSpecific1.spartanPoints);
 
-    t1Stream->setPosition(0x180);
-    t1Stream->write(titleSpecific1.spartanPoints);
+    t1Stream->SetPosition(0x180);
+    t1Stream->Write(titleSpecific1.spartanPoints);
 
     ui->txtServiceTag->text().toWCharArray(titleSpecific1.serviceTag);
     titleSpecific1.serviceTag[4] = 0;
 
-    t1Stream->setPosition(0x12A);
+    t1Stream->SetPosition(0x12A);
     for (DWORD i = 0; i < 5; i++)
-        t1Stream->write((WORD)titleSpecific1.serviceTag[i]);
+        t1Stream->Write((WORD)titleSpecific1.serviceTag[i]);
 
     // put all the settings next to one another, to fix the checksum
     BYTE allSettings[0xB10];
@@ -340,9 +340,11 @@ void Halo4ProfileDialog::on_pushButton_clicked()
     sha1.final(tp3.binaryData.data + 0x258);
 
     // write the settings back to the gpd
+    gpd->StartWriting();
     gpd->WriteSettingEntry(tp1);
     gpd->WriteSettingEntry(tp2);
     gpd->WriteSettingEntry(tp3);
+    gpd->StopWriting();
 
     gpd->Close();
 

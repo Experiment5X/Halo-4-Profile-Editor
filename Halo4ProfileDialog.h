@@ -17,7 +17,8 @@
 // other
 #include "igpdmodder.h"
 #include "BitArray.h"
-#include "MemoryStream.h"
+#include "GPD/GameGPD.h"
+#include "IO/MemoryIO.h"
 #include <botan/sha160.h>
 #include <botan/botan.h>
 
@@ -167,7 +168,7 @@ private:
     SettingEntry tp2;
     SettingEntry tp3;
 
-    MemoryStream *t1Stream;
+    MemoryIO *t1Stream;
 };
 
 #endif // GPDMODDERDIALOG_H
