@@ -22,15 +22,20 @@ CONFIG(release, debug|release) {
 # flags
 QMAKE_CXXFLAGS += -fpermissive
 
+# xbox internals
 INCLUDEPATH += $$PWD/include
+LIBS += -L$$PWD/include/ -lXboxInternals
 
-win32:LIBS += -L$$PWD/include/ -lXboxInternals
-win32:INCLUDEPATH += "C:/botan/include"
-win32:LIBS += -LC:/botan/ -lBotan
+# botan
+win32 {
+    LIBS += -LC:/botan/ -lBotan
+    INCLUDEPATH += C:/botan/include
+} else macx|unix {
+    INCLUDEPATH += /usr/local/include/botan-1.10
+    LIBS += /usr/local/lib/libbotan-1.10.a
+}
 
-unix:INCLUDEPATH += "/usr/local/include/botan-1.10"
-unix:LIBS += "/usr/local/lib/libbotan-1.10.a"
-
+# plugin information
 VERSION = 1.0.0
 INSTALLS += target
 
