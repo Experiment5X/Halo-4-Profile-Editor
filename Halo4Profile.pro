@@ -1,11 +1,11 @@
 TARGET = Halo4Profile
 
 CONFIG(debug, debug|release) {
-    TEMPLATE = app
+    #TEMPLATE = app
     CONFIG += plugin debug
 
     #uncomment the below to build the plugin for debug mode
-    #TEMPLATE = lib
+    TEMPLATE = lib
 
     HEADERS += \
         DebuggingClass.h
@@ -33,7 +33,7 @@ win32 {
 }
 macx|unix {
     INCLUDEPATH += /usr/local/include/botan-1.10
-    LIBS += -L/usr/local/lib/ -llibbotan-1.10
+    LIBS += /usr/local/lib/libbotan-1.10.a
 }
 
 # plugin information
