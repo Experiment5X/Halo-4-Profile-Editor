@@ -10,7 +10,7 @@
 using std::vector;
 using std::wstring;
 
-// Description: different types of entries in an XDBF file
+// Description: different types of entries in an Xdbf file
 enum EntryType
 {
 	Achievement = 1,
@@ -21,7 +21,7 @@ enum EntryType
 	AvatarAward
 };
 
-struct XDBFHeader
+struct XdbfHeader
 {
 	DWORD magic;
 	DWORD version;
@@ -31,7 +31,7 @@ struct XDBFHeader
 	DWORD freeMemTableEntryCount;
 };
 
-struct XDBFEntry
+struct XdbfEntry
 {
 	EntryType type;
 	UINT64 id;
@@ -39,7 +39,7 @@ struct XDBFEntry
 	DWORD length;
 };
 
-struct XDBFFreeMemEntry
+struct XdbfFreeMemEntry
 {
 	DWORD addressSpecifier;
 	DWORD length;
@@ -57,7 +57,7 @@ struct SyncList
 	vector<SyncEntry> toSync;
 	bool lengthChanged;
 
-	XDBFEntry entry;
+    XdbfEntry entry;
 };
 
 struct SyncData
@@ -65,19 +65,20 @@ struct SyncData
 	UINT64 nextSyncID, lastSyncID;
     struct tm *lastSyncedTime;
 
-	XDBFEntry entry;
+    XdbfEntry entry;
 };
 
-struct XDBFEntryGroup
+struct XdbfEntryGroup
 {
-	vector<XDBFEntry> entries;
+    vector<XdbfEntry> entries;
 	SyncData syncData;
 	SyncList syncs;
 };
 
 enum SettingEntryType
 {
-	Int32 = 1,
+    Context,
+    Int32,
 	Int64,
 	Double,
 	UnicodeString,
@@ -89,7 +90,7 @@ enum SettingEntryType
 struct SettingEntry
 {
 	SettingEntryType type;
-	XDBFEntry entry;
+    XdbfEntry entry;
 	union
 	{
         unsigned int int32;
@@ -116,7 +117,7 @@ struct StringEntry
 {
 	wstring ws;
 
-	XDBFEntry entry;
+    XdbfEntry entry;
 	DWORD initialLength;
 };
 
@@ -125,7 +126,7 @@ struct ImageEntry
 	BYTE *image;
 	DWORD length;
 
-	XDBFEntry entry;
+    XdbfEntry entry;
 	DWORD initialLength;
 
     ImageEntry()
@@ -152,7 +153,7 @@ enum AchievementFlags
 
 struct AchievementEntry
 {
-	XDBFEntry entry;
+    XdbfEntry entry;
 	DWORD initialLength;
 
 	DWORD structSize;
@@ -176,7 +177,7 @@ enum TitleEntryFlags
 
 struct TitleEntry
 {
-	XDBFEntry entry;
+    XdbfEntry entry;
 	DWORD initialLength;
 
 	DWORD titleID;
@@ -300,7 +301,7 @@ enum XboxLiveCountry
     UnitedArabEmirates = 1,
     UnitedKingdom = 0x23,
     UnitedStates = 0x67,
-	Unknown = 0,
+    UnknownCountry = 0,
     Uruguay = 0x68,
     Uzbekistan = 0x69,
     Venezuela = 0x6a,
@@ -416,7 +417,7 @@ enum Gamerzone
 
 struct AvatarAward
 {
-	XDBFEntry entry;
+    XdbfEntry entry;
 	DWORD initialSize;
 
 	DWORD structSize;

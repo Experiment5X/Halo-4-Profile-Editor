@@ -2,22 +2,22 @@
 #define GDFX_H
 
 #include "winnames.h"
-#include "IO/MultiFileIO.h"
+#include "IO/SvodMultiFileIO.h"
 #include <iostream>
 #include <vector>
 
 using std::string;
 using std::vector;
 
-struct GDFXHeader
+struct GdfxHeader
 {
     BYTE magic[0x14];   // MICROSOFT*XBOX*MEDIA
     DWORD rootSector;
     DWORD rootSize;
-    FILETIME creationTime;
+    WINFILETIME creationTime;
 };
 
-struct GDFXFileEntry
+struct GdfxFileEntry
 {
     // in the file
     DWORD unknown;
@@ -29,12 +29,12 @@ struct GDFXFileEntry
 
     // extra stuff
     string filePath;
-    vector<GDFXFileEntry> files;
+    vector<GdfxFileEntry> files;
     DWORD address;
     DWORD fileIndex;
 };
 
-enum DirentAttributes
+enum GdfxDirentAttributesutes
 {
     GdfxReadOnly = 0x01,
     GdfxHidden = 0x02,
@@ -45,15 +45,15 @@ enum DirentAttributes
     GdfxNormal = 0x80
 };
 
-// TODO: make this work with the IO interface, and write header
+// TODO: make this work with the IO interface, and Write header
 
 // read the GDFX header, seek io to position of header beforehand
-void GdfxReadHeader(MultiFileIO *io, GDFXHeader *header);
+void GdfxReadHeader(SvodMultiFileIO *io, GdfxHeader *header);
 
 // read the next file entry in the listing, reeturns false on listing end
-bool GdfxReadFileEntry(MultiFileIO *io, GDFXFileEntry *entry);
+bool GdfxReadFileEntry(SvodMultiFileIO *io, GdfxFileEntry *entry);
 
-// write a file entry back to the listing
-void GdfxWriteFileEntry(MultiFileIO *io, GDFXFileEntry *entry);
+// Write a file entry back to the listing
+void GdfxWriteFileEntry(SvodMultiFileIO *io, GdfxFileEntry *entry);
 
 #endif // GDFX_H

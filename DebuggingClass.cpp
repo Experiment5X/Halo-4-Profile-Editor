@@ -18,7 +18,7 @@ DebuggingClass::DebuggingClass(QObject *parent) :
     args->package = profile;
     args->tempFilePath = tempPath;
 
-    GameGPD *gameGPD = new GameGPD(tempPath.toStdString());
+    GameGpd *gameGPD = new GameGpd(tempPath.toStdString());
     bool ok;
     w.LoadGPD(gameGPD, &ok, args);
 

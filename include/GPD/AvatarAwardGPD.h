@@ -1,21 +1,22 @@
 #pragma once
 
-#include "XDBF.h"
-#include "XDBFDefininitions.h"
-#include "XDBFHelpers.h"
-#include "GPDBase.h"
+#include "Xdbf.h"
+#include "XdbfDefininitions.h"
+#include "XdbfHelpers.h"
+#include "GpdBase.h"
 #include <iostream>
+#include <stdio.h>
 
 #include "XboxInternals_global.h"
 
 using std::string;
 
-class XBOXINTERNALSSHARED_EXPORT AvatarAwardGPD : public GPDBase
+class XBOXINTERNALSSHARED_EXPORT AvatarAwardGpd : public GpdBase
 {
 public:
-    AvatarAwardGPD(string gpdPath);
-    AvatarAwardGPD(FileIO *io);
-    ~AvatarAwardGPD(void);
+    AvatarAwardGpd(string gpdPath);
+    AvatarAwardGpd(FileIO *io);
+    ~AvatarAwardGpd(void);
 
     vector<struct AvatarAward> avatarAwards;
 
@@ -34,7 +35,7 @@ public:
     // Description: get the GUID of the avatar award, used in URLs on xbox.com
     static string GetGUID(struct AvatarAward *award);
 
-    // Description: write the avatar award back to the gpd
+    // Description: Write the avatar award back to the gpd
     void WriteAvatarAward(struct AvatarAward *award);
 
     // Description: create a new avatar award
@@ -44,12 +45,12 @@ public:
     void DeleteAvatarAward(struct AvatarAward *award);
 
     // Description: remove all of the unused memory from the gpd
-    void CleanGPD();
+    void CleanGpd();
 
 private:
 
     // Description: read the avatar award entry passed in and return it
-    struct AvatarAward readAvatarAwardEntry(XDBFEntry entry);
+    struct AvatarAward readAvatarAwardEntry(XdbfEntry entry);
 
     // Description: get the URl of the image of the award passed in, hosted on xbox.com
     static string getAwardImageURL(struct AvatarAward *award, bool little);

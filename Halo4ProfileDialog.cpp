@@ -64,7 +64,7 @@ Halo4ProfileDialog::Halo4ProfileDialog(QWidget *parent) : QDialog(parent), ui(ne
 
 Q_EXPORT_PLUGIN2(Halo4Profile, Halo4ProfileDialog)
 
-void Halo4ProfileDialog::LoadGPD(GameGPD *gpd, bool *ok, void *args)
+void Halo4ProfileDialog::LoadGPD(GameGpd *gpd, bool *ok, void *args)
 {
     Arguments = args;
 
@@ -102,10 +102,10 @@ void Halo4ProfileDialog::LoadGPD(GameGPD *gpd, bool *ok, void *args)
 
     t1Stream->SetPosition(0x2C);
     titleSpecific1.missionFlags = t1Stream->ReadDword();
-    titleSpecific1.missionStatuses = t1Stream->ReadUint64();
+    titleSpecific1.missionStatuses = t1Stream->ReadUInt64();
 
     t1Stream->SetPosition(0x50);
-    titleSpecific1.coopMissionStatuses = t1Stream->ReadUint64();
+    titleSpecific1.coopMissionStatuses = t1Stream->ReadUInt64();
 
     t1Stream->SetPosition(0x74);
     titleSpecific1.lastInCampaign = t1Stream->ReadDword();

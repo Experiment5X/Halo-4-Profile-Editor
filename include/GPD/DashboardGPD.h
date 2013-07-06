@@ -1,22 +1,22 @@
 #pragma once
 
-#include "XDBF.h"
-#include "XDBFDefininitions.h"
-#include "XDBFHelpers.h"
-#include "GPDBase.h"
+#include "Xdbf.h"
+#include "XdbfDefininitions.h"
+#include "XdbfHelpers.h"
+#include "GpdBase.h"
 #include <iostream>
 
 #include "XboxInternals_global.h"
 
 using std::string;
 
-class XBOXINTERNALSSHARED_EXPORT DashboardGPD : public GPDBase
+class XBOXINTERNALSSHARED_EXPORT DashboardGpd : public GpdBase
 {
 public:
-	DashboardGPD(string gpdPath);
-	DashboardGPD(FileIO *io);
+	DashboardGpd(string gpdPath);
+	DashboardGpd(FileIO *io);
 
-	~DashboardGPD(void);
+	~DashboardGpd(void);
 
 	vector<TitleEntry> gamesPlayed;
 
@@ -39,7 +39,7 @@ public:
     static string GetSmallBoxArtURL(TitleEntry *entry);
     static string GetLargeBoxArtURL(TitleEntry *entry);
 
-	// Description: write the title entry back to the file
+	// Description: Write the title entry back to the file
 	void WriteTitleEntry(TitleEntry *entry);
 
 	// Description: create a new title entry, make it look like you played a game you actually haven't
@@ -49,12 +49,12 @@ public:
 	void DeleteTitleEntry(TitleEntry *entry);
 
 	// Description: remove all of the unused memory from the gpd
-	void CleanGPD();
+	void CleanGpd();
 
 private:
 
 	// Description: read the title entry
-	TitleEntry readTitleEntry(XDBFEntry entry);
+    TitleEntry readTitleEntry(XdbfEntry entry);
 
 	// read all of the starting stuff
 	void init();

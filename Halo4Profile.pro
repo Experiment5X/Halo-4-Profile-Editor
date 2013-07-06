@@ -28,7 +28,7 @@ LIBS += -L$$PWD/include/ -lXboxInternals
 
 # botan
 win32 {
-    LIBS += -LC:/botan/ -lBotan
+    LIBS += -LC:/botan/ -lbotan-1.10
     INCLUDEPATH += C:/botan/include
 }
 macx|unix {

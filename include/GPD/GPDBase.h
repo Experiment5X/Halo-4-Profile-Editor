@@ -1,8 +1,8 @@
 #pragma once
 
 #include <iostream>
-#include "XDBF.h"
-#include "XDBFDefininitions.h"
+#include "Xdbf.h"
+#include "XdbfDefininitions.h"
 #include <vector>
 
 #include "XboxInternals_global.h"
@@ -10,14 +10,14 @@
 using std::string;
 using std::vector;
 
-class XBOXINTERNALSSHARED_EXPORT GPDBase
+class XBOXINTERNALSSHARED_EXPORT GpdBase
 {
 public:
-    GPDBase(FileIO *io);
-    GPDBase(string gpdPath);
+    GpdBase(FileIO *io);
+    GpdBase(string gpdPath);
 
-    ~GPDBase(void);
-    XDBF *xdbf;
+    ~GpdBase(void);
+    Xdbf *xdbf;
 
     vector<ImageEntry> images;
     vector<StringEntry> strings;
@@ -35,10 +35,10 @@ public:
     // Description: create a new image entry
     void CreateImageEntry(ImageEntry *image, UINT64 entryID);
 
-    // Description: write the setting entry to the file
+    // Description: Write the setting entry to the file
     void WriteSettingEntry(SettingEntry setting);
 
-    // Description: write the image entry to the file
+    // Description: Write the image entry to the file
     void WriteImageEntry(ImageEntry image);
 
     // Description: close all open resources attatched to the file
@@ -56,10 +56,10 @@ protected:
 
 private:
     // Description: read the string entry passed in
-    wstring readStringEntry(XDBFEntry entry);
+    wstring readStringEntry(XdbfEntry entry);
 
     // Description: read the setting entry passed in
-    SettingEntry readSettingEntry(XDBFEntry entry);
+    SettingEntry readSettingEntry(XdbfEntry entry);
 
     // read in all of the images, settings, and strings
     void init();

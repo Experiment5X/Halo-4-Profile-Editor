@@ -17,7 +17,7 @@
 // other
 #include "igpdmodder.h"
 #include "BitArray.h"
-#include "GPD/GameGPD.h"
+#include "Gpd/GameGpd.h"
 #include "IO/MemoryIO.h"
 #include <botan/sha160.h>
 #include <botan/botan.h>
@@ -115,7 +115,7 @@ public:
     explicit Halo4ProfileDialog(QWidget *parent = 0);
     ~Halo4ProfileDialog();
 
-    void LoadGPD (GameGPD *gpd, bool *ok = NULL, void *args = NULL);
+    void LoadGPD (GameGpd *gpd, bool *ok = NULL, void *args = NULL);
     QWidget* GetDialog();
     QString Version() const;
     QString ToolAuthor() const;
@@ -156,7 +156,7 @@ private slots:
 private:
     Ui::Halo4ProfileDialog *ui;
 
-    GameGPD *gpd;
+    GameGpd *gpd;
     QString gpdPath;
     Halo4_TS1 titleSpecific1;
     BitArray *rallyPointBits;
